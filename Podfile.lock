@@ -1,5 +1,5 @@
 PODS:
-  - CryptoSwift (0.13.0)
+  - CryptoSwift (1.2.0)
   - EllipticCurveKeyPair (2.0-beta1)
   - KeychainAccess (4.2.1)
   - PromiseKit (6.3.5):
@@ -13,25 +13,25 @@ PODS:
     - PromiseKit/CorePromise
 
 DEPENDENCIES:
-  - CryptoSwift (~> 0.13.0)
+  - CryptoSwift (~> 1.2.0)
   - EllipticCurveKeyPair (~> 2.0-beta1)
   - KeychainAccess (~> 4.2.1)
   - PromiseKit (~> 6.3.4)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - CryptoSwift
     - EllipticCurveKeyPair
     - PromiseKit
   trunk:
+    - CryptoSwift
     - KeychainAccess
 
 SPEC CHECKSUMS:
-  CryptoSwift: 16e78bebf567bad1c87b2d58f6547f25b74c31aa
+  CryptoSwift: 40e374e45291d8dceedcb0d6184da94533eaabdf
   EllipticCurveKeyPair: 0c447d7b6e1de511553e0beed42f2dd21b6bab07
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   PromiseKit: 32c36425387e9cfc7f1206f27bfd906d0b53c0d6
 
-PODFILE CHECKSUM: 018fc208e3a1cc61756cd015da203d0e2bad1dce
+PODFILE CHECKSUM: a9d162a20ad9f6120bb44fbed345f838a6d3f600
 
 COCOAPODS: 1.9.3
