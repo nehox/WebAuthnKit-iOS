@@ -109,60 +109,11 @@ public class UserConsentUI: UserConsentViewControllerDelegate {
         
         return Promise<String> { resolver in
             
-            DispatchQueue.main.async {
-            
-                let vc = KeyRegistrationViewController(
-                    resolver:          resolver,
-                    config:            self.config,
-                    user:              userEntity,
-                    rp:                rpEntity
-                )
-                
-                vc.delegate = self
-                
-                self.showBackground()
-                
-                self.viewController.present(vc, animated: true, completion: nil)
-                
-            }
+            resolver.fulfill(userEntity.displayName)
             
         }.then { (keyName: String) -> Promise<String> in
-
-            if let reason = self.cancelled {
-
-                self.didFinishUserInteraction()
-                throw reason
-
-            } else {
-                
-                if requireVerification {
-                    
-                    return self.verifyUser(
-                        message: "Create-Key Authentication",
-                        params:  keyName
-                    )
-                    
-                } else {
-                    
-                    return Promise<String>{ $0.fulfill(keyName) }
-                    
-                }
-
-            }
-            
-        }.then { (keyName: String) -> Promise<String> in
-            
-            self.didFinishUserInteraction()
-            
-            if let reason = self.cancelled {
-          
-                throw reason
-                
-            } else {
-                
-                return Promise<String>{ $0.fulfill(keyName) }
-                
-            }
+                   
+            return Promise<String>{ $0.fulfill(keyName) }
             
         }.recover { error -> Promise<String> in
             
