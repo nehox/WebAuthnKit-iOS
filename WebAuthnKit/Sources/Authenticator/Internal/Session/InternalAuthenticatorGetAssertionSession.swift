@@ -28,7 +28,7 @@ public class InternalAuthenticatorGetAssertionSession : AuthenticatorGetAssertio
         }
     }
     
-    private let ui:                UserConsentUI
+    private let ui:                UserConsentUI?
     private let credentialStore:   CredentialStore
     private let keySupportChooser: KeySupportChooser
     
@@ -37,7 +37,7 @@ public class InternalAuthenticatorGetAssertionSession : AuthenticatorGetAssertio
     
     init(
         setting:             InternalAuthenticatorSetting,
-        ui:                  UserConsentUI,
+        ui:                  UserConsentUI?,
         credentialStore:     CredentialStore,
         keySupportChooser:   KeySupportChooser
     ) {
@@ -72,9 +72,14 @@ public class InternalAuthenticatorGetAssertionSession : AuthenticatorGetAssertio
             WAKLogger.debug("<GetAssertionSession> already stopped")
             return
         }
-        if self.ui.opened {
-            WAKLogger.debug("<GetAssertionSession> during user interaction")
-            self.ui.cancel(reason: reason)
+        if self.ui != nil {
+            if self.ui!.opened {
+                WAKLogger.debug("<GetAssertionSession> during user interaction")
+                self.ui!.cancel(reason: reason)
+            } else {
+                WAKLogger.debug("<GetAssertionSession> stop by clientCancelled")
+                self.stop(by: reason)
+            }
         } else {
             WAKLogger.debug("<GetAssertionSession> stop by clientCancelled")
             self.stop(by: reason)
@@ -125,14 +130,7 @@ public class InternalAuthenticatorGetAssertionSession : AuthenticatorGetAssertio
             return
         }
         
-        firstly {
-            
-            self.ui.requestUserSelection(
-                sources:             credSources,
-                requireVerification: requireUserVerification
-            )
-            
-        }.done { cred in
+        if let cred = credSources.first {
                 
             var newSignCount: UInt32 = 0
 
@@ -195,12 +193,8 @@ public class InternalAuthenticatorGetAssertionSession : AuthenticatorGetAssertio
                 assertion: assertion
             )
                 
-        }.catch { error in
-            if let err = error as? WAKError {
-                self.stop(by: err)
-            } else {
-                self.stop(by: .unknown)
-            }
+        }else {
+            self.stop(by: .unknown)
         }
         
     }

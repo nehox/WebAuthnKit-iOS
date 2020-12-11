@@ -65,7 +65,7 @@ public class InternalAuthenticator : Authenticator {
         }
     }
 
-    private let ui:              UserConsentUI
+    private let ui:              UserConsentUI?
     private let credentialStore: CredentialStore
 
     private let keySupportChooser = KeySupportChooser()

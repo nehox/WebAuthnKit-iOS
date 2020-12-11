@@ -28,7 +28,7 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
         }
     }
     
-    private let ui:                UserConsentUI
+    private let ui:                UserConsentUI?
     private let credentialStore:   CredentialStore
     private let keySupportChooser: KeySupportChooser
     
@@ -37,7 +37,7 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
     
     init(
         setting:           InternalAuthenticatorSetting,
-        ui:                UserConsentUI,
+        ui:                UserConsentUI?,
         credentialStore:   CredentialStore,
         keySupportChooser: KeySupportChooser
     ) {
@@ -75,9 +75,13 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
             WAKLogger.debug("<MakeCredentialSession> already stopped")
             return
         }
-        if self.ui.opened {
-            WAKLogger.debug("<MakeCredentialSession> during user interaction")
-            self.ui.cancel(reason: reason)
+        if self.ui != nil {
+            if self.ui!.opened {
+                WAKLogger.debug("<MakeCredentialSession> during user interaction")
+                self.ui!.cancel(reason: reason)
+            } else {
+                self.stop(by: reason)
+            }
         } else {
             self.stop(by: reason)
         }
@@ -134,24 +138,6 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
             ) != nil
         }
         
-        if hasSourceToBeExcluded {
-            firstly {
-                self.ui.askUserToCreateNewCredential(rpId: rpEntity.id!)
-            }.done {
-                self.stop(by: .invalidState)
-                return
-            }.catch { error in
-                switch error {
-                case WAKError.notAllowed:
-                    self.stop(by: .notAllowed)
-                    return
-                default:
-                    self.stop(by: .unknown)
-                    return
-                }
-            }
-            return
-        }
         
         if requireUserVerification && !self.setting.allowUserVerification {
             WAKLogger.debug("<MakeCredentialSession> insufficient capability (user verification), stop session")
@@ -159,15 +145,8 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
             return
         }
         
-        firstly {
             
-            self.ui.requestUserConsent(
-                rpEntity:            rpEntity,
-                userEntity:          userEntity,
-                requireVerification: requireUserVerification
-            )
-            
-        }.done { keyName in
+            let keyName = userEntity.displayName
                 
             let credentialId = self.createNewCredentialId()
 
@@ -235,14 +214,6 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
                 session:     self,
                 attestation: attestation
             )
-
-        }.catch { error in
-            if let err = error as? WAKError {
-                self.stop(by: err)
-            } else {
-                self.stop(by: .unknown)
-            }
-        }
     }
     
     // 6.3.1 Lookup Credential Source By Credential ID Algoreithm
