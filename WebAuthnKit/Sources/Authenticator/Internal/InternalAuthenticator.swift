@@ -70,7 +70,7 @@ public class InternalAuthenticator : Authenticator {
 
     private let keySupportChooser = KeySupportChooser()
     
-    public convenience init(ui: UserConsentUI) {
+    public convenience init(ui: UserConsentUI?) {
         let store = KeychainCredentialStore()
         self.init(
             ui:              ui,
@@ -79,7 +79,7 @@ public class InternalAuthenticator : Authenticator {
     }
 
     public init(
-        ui:              UserConsentUI,
+        ui:              UserConsentUI?,
         credentialStore: CredentialStore
     ) {
         self.ui              = ui
