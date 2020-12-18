@@ -166,7 +166,9 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
 
             // TODO should remove fron KeyPair too?
 
-            guard let publicKeyCOSE = keySupport.createKeyPair(label: credSource.keyLabel) else {
+        WAKLogger.debug("keySupport.createKeyPair(label: \(keyName))")
+        
+            guard let publicKeyCOSE = keySupport.createKeyPair(label: keyName) else {
                 self.stop(by: .unknown)
                 return
             }
