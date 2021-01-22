@@ -290,9 +290,11 @@ public class ClientCreateOperation: AuthenticatorMakeCredentialSessionDelegate {
         //     on "indirect" conveyance request
         
         var attestationObject: [UInt8]! = nil
-        if self.options.attestation == .none && !attestation.isSelfAttestation() {
+        if self.options.attestation == .none {
             WAKLogger.debug("<CreateOperation> attestation conveyance request is 'none', but this is not a self-attestation.")
             atts = attestation.toNone()
+            
+            WAKLogger.debug(atts.authData.attestedCredentialData.debugDescription)
             guard let bytes = atts.toBytes() else {
                 WAKLogger.debug("<CreateOperation> failed to build attestation-object")
                 self.dispatchError(.unknown)

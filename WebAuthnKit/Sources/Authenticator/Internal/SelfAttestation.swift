@@ -41,7 +41,7 @@ public class SelfAttestation {
         stmt.addBytes("sig", sig)
         
         return AttestationObject(
-            fmt:      "packed",
+            fmt:      "none",
             authData: authData,
             attStmt:  stmt
         )

@@ -26,8 +26,9 @@ public class AttestationObject {
 
     public func toNone() -> AttestationObject {
         // TODO copy authData with aaguid=0
+       
         return AttestationObject(
-            fmt: "none",
+            fmt: self.fmt,
             authData: self.authData,
             attStmt: SimpleOrderedDictionary<String>()
         )
@@ -56,7 +57,7 @@ public class AttestationObject {
 
         let dict = SimpleOrderedDictionary<String>()
         dict.addBytes("authData", self.authData.toBytes())
-        dict.addString("fmt", "packed")
+        dict.addString("fmt", self.fmt)
         dict.addStringKeyMap("attStmt", self.attStmt)
 
         return CBORWriter()

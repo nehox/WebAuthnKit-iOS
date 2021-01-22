@@ -84,6 +84,10 @@ public struct AttestedCredentialData {
         result.append(contentsOf: credentialPublicKey.toBytes())
         return result
     }
+    
+    public func toStringDebug() -> String {
+        return "---> aaguid : \(aaguid)\n---> credentialIdLength : \(credentialId.count)\n---> credentialId : \(credentialId)\n---> credentialPublicKey : \(credentialPublicKey) "
+    }
 }
 
 public struct AuthenticatorData {
@@ -179,6 +183,23 @@ public struct AuthenticatorData {
     let signCount:              UInt32
     let attestedCredentialData: AttestedCredentialData?
     let extensions:             SimpleOrderedDictionary<String>;
+    
+    
+    public func toStringDebug() -> String {
+        
+        var debugStr = "\n\n\n"
+        
+        debugStr += "rpIdHash : \(rpIdHash)\n"
+        debugStr += "userPresent : \(userPresent)\n"
+        debugStr += "userVerified : \(userVerified)\n"
+        debugStr += "signCount : \(signCount)\n"
+        debugStr += "attestedCredentialData : \(attestedCredentialData?.toStringDebug())\n"
+        debugStr += "extensions : \(extensions)"
+        debugStr += "\n\n\n"
+        
+        
+        return debugStr
+    }
 
     public func toBytes() -> [UInt8] {
         WAKLogger.debug("<AuthenticatorData> toBytes")

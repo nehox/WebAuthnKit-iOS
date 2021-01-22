@@ -21,7 +21,7 @@ class AuthenticationViewController: UIViewController, UITextFieldDelegate {
         self.userConsentUI = UserConsentUI(viewController: self)
         self.userConsentUI.config.alwaysShowKeySelection = true
 
-        let authenticator = InternalAuthenticator(ui: self.userConsentUI)
+        let authenticator = InternalAuthenticator(ui: nil)
         
         self.webAuthnClient = WebAuthnClient(
             origin:        "https://example.org",

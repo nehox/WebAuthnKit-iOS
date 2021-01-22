@@ -210,6 +210,8 @@ public class InternalAuthenticatorMakeCredentialSession : AuthenticatorMakeCrede
                     self.stop(by: .unknown)
                     return
             }
+        
+            WAKLogger.debug(attestation.authData.toStringDebug())
 
             self.completed()
             self.delegate?.authenticatorSessionDidMakeCredential(
